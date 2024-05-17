@@ -4,13 +4,16 @@ import com.sparta.schedule.dto.ScheduleRequestDto;
 import com.sparta.schedule.dto.ScheduleResponseDto;
 import com.sparta.schedule.entity.Schedule;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
-
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -47,4 +50,20 @@ public class ScheduleController {
         return scheduleResponseDto;
     }
 
+    @GetMapping("/schedule")
+    public List<ScheduleResponseDto> getSchedule(Long id){
+        String sql = "SELECT * FROM schedule WHERE id = ?";
+
+        return jdbcTemplate.query(sql, new RowMapper<ScheduleResponseDto>() {
+            @Override
+            public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Long id = rs.getLong("id");
+                String title = rs.getString("title");
+                String content = rs.getString("content");
+                String manager = rs.getString("manager");
+                String date = rs.getString("date");
+                return new ScheduleResponseDto(id, title, content, manager, date);
+            }
+        }, id);
+    }
 }
