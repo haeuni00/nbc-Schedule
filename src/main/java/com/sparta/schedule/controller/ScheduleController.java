@@ -97,6 +97,19 @@ public class ScheduleController {
         }
     }
 
+    @DeleteMapping("/schedule")
+    public Long deleteSchedule(@RequestParam Long id, @RequestParam String password){
+        Schedule schedule = findIdPwd(id, password);
+        if(schedule != null){
+            String sql = "DELETE FROM schedule WHERE id = ? AND password = ?";
+            jdbcTemplate.update(sql, id, password);
+
+            return id;
+        } else{
+            throw new IllegalArgumentException("일정이 존재하지 않습니다.");
+        }
+    }
+
     private Schedule findIdPwd(Long id, String password) {
         String sql = "SELECT * FROM schedule WHERE id = ? AND password = ?";
 
