@@ -66,4 +66,21 @@ public class ScheduleController {
             }
         }, id);
     }
+
+    @GetMapping("/schedule/All")
+    public List<ScheduleResponseDto> getAllSchedule(){
+        String sql = "SELECT * FROM schedule order by date DESC";
+
+        return jdbcTemplate.query(sql, new RowMapper<ScheduleResponseDto>() {
+            @Override
+            public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Long id = rs.getLong("id");
+                String title = rs.getString("title");
+                String content = rs.getString("content");
+                String manager = rs.getString("manager");
+                String date = rs.getString("date");
+                return new ScheduleResponseDto(id, title, content, manager, date);
+            }
+        });
+    }
 }
