@@ -83,4 +83,33 @@ public class ScheduleController {
             }
         });
     }
+
+    @PutMapping("/schedule")
+    public Long updateSchedule(@RequestParam Long id, @RequestParam String password, @RequestBody ScheduleRequestDto requestDto) {
+        Schedule schedule = findIdPwd(id, password);
+        if(schedule != null) {
+            String sql = "UPDATE schedule SET title = ?, content = ?, manager = ? WHERE id = ? AND password = ?";
+            jdbcTemplate.update(sql, requestDto.getTitle(), requestDto.getContent(), requestDto.getManager(), id, password);
+
+            return id;
+        } else {
+            throw new IllegalArgumentException("일정이 존재하지 않습니다.");
+        }
+    }
+
+    private Schedule findIdPwd(Long id, String password) {
+        String sql = "SELECT * FROM schedule WHERE id = ? AND password = ?";
+
+        return jdbcTemplate.query(sql, resultSet -> {
+            if(resultSet.next()) {
+                Schedule schedule = new Schedule();
+                schedule.setTitle(resultSet.getString("title"));
+                schedule.setContent(resultSet.getString("content"));
+                schedule.setManager(resultSet.getString("manager"));
+                return schedule;
+            } else {
+                return null;
+            }
+        }, id, password);
+    }
 }
