@@ -1,21 +1,31 @@
 package com.sparta.schedule.entity;
 
 import com.sparta.schedule.dto.ScheduleRequestDto;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
 
+@Entity
 @Getter
+@Table(name = "schedule")
 @NoArgsConstructor
 public class Schedule {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(name = "title", nullable = false)
     private String title;
+    @Column(name = "content", nullable = false)
     private String content;
+    @Column(name = "manager", nullable = false)
     private String manager;
+    @Column(name = "password", nullable = false)
     private String password;
+    @Column(name = "date")
     private Timestamp date;
 
     public Schedule(ScheduleRequestDto requestDto){

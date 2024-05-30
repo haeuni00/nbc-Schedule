@@ -5,22 +5,22 @@ import com.sparta.schedule.dto.ScheduleResponseDto;
 import com.sparta.schedule.entity.Schedule;
 import com.sparta.schedule.repository.ScheduleRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+@Service
 public class ScheduleService {
-    private final JdbcTemplate jdbcTemplate;
-
-    public ScheduleService(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    private final ScheduleRepository scheduleRepository;
+    public ScheduleService(ScheduleRepository scheduleRepository) {
+        this.scheduleRepository = scheduleRepository;
     }
 
     public ScheduleResponseDto createSchedule(@RequestBody ScheduleRequestDto requestDto) {
         Schedule schedule = new Schedule(requestDto);
 
-        ScheduleRepository scheduleRepository = new ScheduleRepository(jdbcTemplate);
         Schedule saveSchedule = scheduleRepository.save(schedule);
 
         ScheduleResponseDto scheduleResponseDto = new ScheduleResponseDto(schedule);
@@ -30,17 +30,14 @@ public class ScheduleService {
 
     public List<ScheduleResponseDto> getSchedule(Long id){
 
-        ScheduleRepository scheduleRepository = new ScheduleRepository(jdbcTemplate);
         return scheduleRepository.findList(id);
     }
 
     public List<ScheduleResponseDto> getAllSchedule(){
-        ScheduleRepository scheduleRepository = new ScheduleRepository(jdbcTemplate);
         return scheduleRepository.findAll();
     }
 
     public Long updateSchedule(Long id, ScheduleRequestDto requestDto) {
-        ScheduleRepository scheduleRepository = new ScheduleRepository(jdbcTemplate);
 
         Schedule schedule = scheduleRepository.findById(id);
         if(schedule != null) {
@@ -56,7 +53,6 @@ public class ScheduleService {
     }
 
     public Long deleteSchedule(Long id, ScheduleRequestDto requestDto){
-        ScheduleRepository scheduleRepository = new ScheduleRepository(jdbcTemplate);
 
         Schedule schedule = scheduleRepository.findById(id);
         if(schedule != null) {
