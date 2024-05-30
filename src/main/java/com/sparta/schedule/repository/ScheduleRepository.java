@@ -8,10 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 
 public class ScheduleRepository {
@@ -32,7 +29,7 @@ public class ScheduleRepository {
                     preparedStatement.setString(2, schedule.getContent());
                     preparedStatement.setString(3, schedule.getManager());
                     preparedStatement.setString(4, schedule.getPassword());
-                    preparedStatement.setString(5, schedule.getDate());
+                    preparedStatement.setTimestamp(5, schedule.getDate());
                     return preparedStatement;
                 },
                 keyHolder);
@@ -53,7 +50,7 @@ public class ScheduleRepository {
                 String title = rs.getString("title");
                 String content = rs.getString("content");
                 String manager = rs.getString("manager");
-                String date = rs.getString("date");
+                Timestamp date = rs.getTimestamp("date");
                 return new ScheduleResponseDto(id, title, content, manager, date);
             }
         }, id);
@@ -69,24 +66,24 @@ public class ScheduleRepository {
                 String title = rs.getString("title");
                 String content = rs.getString("content");
                 String manager = rs.getString("manager");
-                String date = rs.getString("date");
+                Timestamp date = rs.getTimestamp("date");
                 return new ScheduleResponseDto(id, title, content, manager, date);
             }
         });
     }
 
-    public void update(Long id,String password,ScheduleRequestDto requestDto){
+    public void update(Long id, ScheduleRequestDto requestDto){
         String sql = "UPDATE schedule SET title = ?, content = ?, manager = ? WHERE id = ? AND password = ?";
-        jdbcTemplate.update(sql, requestDto.getTitle(), requestDto.getContent(), requestDto.getManager(), id, password);
+        jdbcTemplate.update(sql, requestDto.getTitle(), requestDto.getContent(), requestDto.getManager(), id, requestDto.getPassword());
     }
 
-    public void delete(Long id, String password) {
-        String sql = "DELETE FROM schedule WHERE id = ? AND password = ?";
-        jdbcTemplate.update(sql, id, password);
+    public void delete(Long id) {
+        String sql = "DELETE FROM schedule WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 
-    public Schedule findIdPwd(Long id, String password) {
-        String sql = "SELECT * FROM schedule WHERE id = ? AND password = ?";
+    public Schedule findById(Long id) {
+        String sql = "SELECT * FROM schedule WHERE id = ?";
 
         return jdbcTemplate.query(sql, resultSet -> {
             if(resultSet.next()) {
@@ -94,10 +91,11 @@ public class ScheduleRepository {
                 schedule.setTitle(resultSet.getString("title"));
                 schedule.setContent(resultSet.getString("content"));
                 schedule.setManager(resultSet.getString("manager"));
+                schedule.setPassword(resultSet.getString("password"));
                 return schedule;
             } else {
                 return null;
             }
-        }, id, password);
+        }, id);
     }
 }

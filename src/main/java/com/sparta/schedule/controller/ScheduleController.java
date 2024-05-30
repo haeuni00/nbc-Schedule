@@ -43,14 +43,14 @@ public class ScheduleController {
     }
 
     @PutMapping("/schedule")
-    public Long updateSchedule(@RequestParam Long id, @RequestParam String password, @RequestBody ScheduleRequestDto requestDto) {
+    public Long updateSchedule(@RequestParam Long id, @RequestBody ScheduleRequestDto requestDto) {
         ScheduleService scheduleService = new ScheduleService(jdbcTemplate);
-        return scheduleService.updateSchedule(id, password, requestDto);
+        return scheduleService.updateSchedule(id, requestDto);
     }
 
     @DeleteMapping("/schedule")
-    public Long deleteSchedule(@RequestParam Long id, @RequestParam String password){
+    public Long deleteSchedule(@RequestParam Long id, @RequestBody ScheduleRequestDto requestDto){
         ScheduleService scheduleService = new ScheduleService(jdbcTemplate);
-        return scheduleService.deleteSchedule(id, password);
+        return scheduleService.deleteSchedule(id, requestDto);
     }
 }

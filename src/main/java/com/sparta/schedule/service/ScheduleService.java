@@ -39,25 +39,33 @@ public class ScheduleService {
         return scheduleRepository.findAll();
     }
 
-    public Long updateSchedule(Long id,String password,ScheduleRequestDto requestDto) {
+    public Long updateSchedule(Long id, ScheduleRequestDto requestDto) {
         ScheduleRepository scheduleRepository = new ScheduleRepository(jdbcTemplate);
 
-        Schedule schedule = scheduleRepository.findIdPwd(id, password);
+        Schedule schedule = scheduleRepository.findById(id);
         if(schedule != null) {
-            scheduleRepository.update(id, password, requestDto);
-            return id;
+            if(!schedule.getPassword().equals(requestDto.getPassword())){
+                throw  new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            } else {
+                scheduleRepository.update(id, requestDto);
+                return id;
+            }
         } else {
             throw new IllegalArgumentException("일정이 존재하지 않습니다.");
         }
     }
 
-    public Long deleteSchedule(Long id,String password){
+    public Long deleteSchedule(Long id, ScheduleRequestDto requestDto){
         ScheduleRepository scheduleRepository = new ScheduleRepository(jdbcTemplate);
 
-        Schedule schedule = scheduleRepository.findIdPwd(id, password);
+        Schedule schedule = scheduleRepository.findById(id);
         if(schedule != null) {
-            scheduleRepository.delete(id, password);
-            return id;
+            if(!schedule.getPassword().equals(requestDto.getPassword())){
+                throw  new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            }else {
+                scheduleRepository.delete(id);
+                return id;
+            }
         } else {
             throw new IllegalArgumentException("일정이 존재하지 않습니다.");
         }
