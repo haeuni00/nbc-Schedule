@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,6 +29,10 @@ public class Schedule {
     private String password;
     @Column(name = "date")
     private Timestamp date;
+
+    @OneToMany
+    @JoinColumn(name = "scheduleid")
+    private List<Comment> commentList = new ArrayList<>();
 
     public Schedule(ScheduleRequestDto requestDto){
         this.title = requestDto.getTitle();
