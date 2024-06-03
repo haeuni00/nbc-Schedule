@@ -28,4 +28,8 @@ public class Comment {
         this.scheduleid = requestDto.getScheduleid();
         this.date = requestDto.getDate();
     }
+
+    public void update(Long commentid, CommentRequestDto requestDto) {
+        this.comment = requestDto.getComment();
+    }
 }
