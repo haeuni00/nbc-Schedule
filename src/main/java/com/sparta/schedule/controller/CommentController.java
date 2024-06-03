@@ -2,6 +2,7 @@ package com.sparta.schedule.controller;
 
 import com.sparta.schedule.dto.CommentRequestDto;
 import com.sparta.schedule.dto.CommentResponseDto;
+import com.sparta.schedule.dto.ScheduleRequestDto;
 import com.sparta.schedule.entity.Comment;
 import com.sparta.schedule.service.CommentService;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,5 +29,10 @@ public class CommentController {
     @PutMapping("/comment")
     public Long updateComment(@RequestParam Long commentid, @RequestBody CommentRequestDto requestDto){
         return commentService.updateComment(commentid, requestDto);
+    }
+
+    @DeleteMapping("/comment")
+    public String deleteComment(@RequestParam Long commentid, @RequestBody CommentRequestDto requestDto){
+        return commentService.deleteComment(commentid, requestDto);
     }
 }

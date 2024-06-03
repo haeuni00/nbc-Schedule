@@ -43,6 +43,13 @@ public class CommentService {
         return commentid;
     }
 
+    public String deleteComment(Long commentid, CommentRequestDto requestDto) {
+
+        Comment comment = findComment(commentid);
+        commentRepository.delete(comment);
+        return "삭제되었습니다.";
+    }
+
     private Comment findComment(Long commentid){
         return commentRepository.findById(commentid).orElseThrow(() ->
                 new IllegalArgumentException("댓글이 존재하지 않습니다."));
