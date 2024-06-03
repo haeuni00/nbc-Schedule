@@ -6,12 +6,15 @@ import com.sparta.schedule.entity.Schedule;
 import com.sparta.schedule.repository.ScheduleRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
+@Transactional
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     public ScheduleService(ScheduleRepository scheduleRepository) {
@@ -30,40 +33,37 @@ public class ScheduleService {
 
     public List<ScheduleResponseDto> getSchedule(Long id){
 
-        return scheduleRepository.findList(id);
+        return scheduleRepository.findAllById(Collections.singleton(id)).stream().map(ScheduleResponseDto::new).toList();
     }
 
     public List<ScheduleResponseDto> getAllSchedule(){
-        return scheduleRepository.findAll();
+        return scheduleRepository.findAll().stream().map(ScheduleResponseDto::new).toList();
     }
 
     public Long updateSchedule(Long id, ScheduleRequestDto requestDto) {
 
-        Schedule schedule = scheduleRepository.findById(id);
-        if(schedule != null) {
+        Schedule schedule = findSchedule(id);
             if(!schedule.getPassword().equals(requestDto.getPassword())){
                 throw  new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
             } else {
-                scheduleRepository.update(id, requestDto);
+                schedule.update(id, requestDto);
                 return id;
             }
-        } else {
-            throw new IllegalArgumentException("일정이 존재하지 않습니다.");
-        }
     }
 
     public Long deleteSchedule(Long id, ScheduleRequestDto requestDto){
 
-        Schedule schedule = scheduleRepository.findById(id);
-        if(schedule != null) {
+        Schedule schedule = findSchedule(id);
             if(!schedule.getPassword().equals(requestDto.getPassword())){
                 throw  new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
             }else {
-                scheduleRepository.delete(id);
+                scheduleRepository.delete(schedule);
                 return id;
             }
-        } else {
-            throw new IllegalArgumentException("일정이 존재하지 않습니다.");
-        }
+    }
+
+    private Schedule findSchedule(Long id){
+        return scheduleRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("일정이 존재하지 않습니다."));
     }
 }

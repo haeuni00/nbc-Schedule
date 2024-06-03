@@ -8,5 +8,6 @@ import java.sql.Timestamp;
 public class CommentRequestDto {
     private String comment;
     private String userid;
+    private Long scheduleid;
     private Timestamp date;
 }

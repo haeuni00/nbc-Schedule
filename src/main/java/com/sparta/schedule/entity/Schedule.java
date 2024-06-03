@@ -39,6 +39,15 @@ public class Schedule {
         this.content = requestDto.getContent();
         this.manager = requestDto.getManager();
         this.password = requestDto.getPassword();
+        this.date = requestDto.getDate();
+    }
+
+    public void update(Long id, ScheduleRequestDto requestDto){
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+        this.manager = requestDto.getManager();
+        this.password = requestDto.getPassword();
+        this.date = requestDto.getDate();
     }
 
     public void setId(long id) {

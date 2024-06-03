@@ -21,7 +21,7 @@ public class CommentController {
     }
 
     @PostMapping("/comment")
-    public CommentResponseDto createComment(@RequestParam Long id, @RequestBody CommentRequestDto requestDto) {
-        return commentService.createComment(id, requestDto);
+    public CommentResponseDto createComment(@RequestBody CommentRequestDto requestDto) {
+        return commentService.createComment(requestDto);
     }
 }

@@ -17,10 +17,10 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    public CommentResponseDto createComment(@RequestParam Long id, @RequestBody CommentRequestDto requestDto) {
+    public CommentResponseDto createComment(@RequestBody CommentRequestDto requestDto) {
         Comment comment = new Comment(requestDto);
 
-        Comment saveComment = commentRepository.save(id, comment);
+        Comment saveComment = commentRepository.save(comment);
 
         CommentResponseDto commentResponseDto = new CommentResponseDto(comment);
 
