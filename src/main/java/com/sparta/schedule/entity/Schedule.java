@@ -30,9 +30,6 @@ public class Schedule {
     @Column(name = "date")
     private Timestamp date;
 
-    @OneToMany
-    @JoinColumn(name = "scheduleid")
-    private List<Comment> commentList = new ArrayList<>();
 
     public Schedule(ScheduleRequestDto requestDto){
         this.title = requestDto.getTitle();

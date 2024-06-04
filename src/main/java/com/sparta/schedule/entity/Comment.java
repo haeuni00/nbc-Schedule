@@ -10,7 +10,6 @@ import java.sql.Timestamp;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "comment")
 @NoArgsConstructor
 public class Comment {
@@ -19,13 +18,16 @@ public class Comment {
     private Long commentid;
     private String comment;
     private String userid;
-    private Long scheduleid;
+
+    @ManyToOne
+    @JoinColumn(name = "scheduleid")
+    private Schedule schedule;
     private Timestamp date;
 
     public Comment(CommentRequestDto requestDto) {
         this.comment = requestDto.getComment();
         this.userid = requestDto.getUserid();
-        this.scheduleid = requestDto.getScheduleid();
+        this.schedule = requestDto.getSchedule();
         this.date = requestDto.getDate();
     }
 

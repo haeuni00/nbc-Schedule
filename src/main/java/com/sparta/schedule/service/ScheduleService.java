@@ -62,7 +62,7 @@ public class ScheduleService {
             }
     }
 
-    private Schedule findSchedule(Long id){
+    protected Schedule findSchedule(Long id){
         return scheduleRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("일정이 존재하지 않습니다."));
     }

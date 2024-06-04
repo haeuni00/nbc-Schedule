@@ -1,5 +1,6 @@
 package com.sparta.schedule.dto;
 
+import com.sparta.schedule.entity.Schedule;
 import lombok.Getter;
 
 import java.sql.Timestamp;
@@ -8,6 +9,6 @@ import java.sql.Timestamp;
 public class CommentRequestDto {
     private String comment;
     private String userid;
-    private Long scheduleid;
+    private Schedule schedule;
     private Timestamp date;
 }
