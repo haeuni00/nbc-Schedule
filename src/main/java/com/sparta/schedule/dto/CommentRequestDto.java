@@ -1,14 +1,15 @@
 package com.sparta.schedule.dto;
 
 import com.sparta.schedule.entity.Schedule;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-
-import java.sql.Timestamp;
 
 @Getter
 public class CommentRequestDto {
+
+    @NotNull
     private String comment;
-    private String userid;
+    @NotNull
     private Schedule schedule;
-    private Timestamp date;
 }

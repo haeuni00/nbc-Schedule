@@ -1,32 +1,28 @@
 package com.sparta.schedule.dto;
 
 import com.sparta.schedule.entity.Schedule;
+import com.sparta.schedule.entity.User;
 import lombok.Getter;
-
-import java.sql.Timestamp;
 
 @Getter
 public class ScheduleResponseDto {
     private Long id;
     private String title;
     private String content;
-    private String manager;
-    private Timestamp date;
+    private String userName;
 
     public ScheduleResponseDto(Schedule schedule){
         this.id = schedule.getId();
         this.title = schedule.getTitle();
         this.content = schedule.getContent();
-        this.manager = schedule.getManager();
-        this.date = schedule.getDate();
+        this.userName = schedule.getUser().getUserName();
     }
 
-    public ScheduleResponseDto(Long id, String title, String content, String manager, Timestamp date) {
+    public ScheduleResponseDto(Long id, String title, String content, String userName) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.manager = manager;
-        this.date = date;
+        this.userName = userName;
     }
 }
 

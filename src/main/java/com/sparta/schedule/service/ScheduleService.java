@@ -3,7 +3,9 @@ package com.sparta.schedule.service;
 import com.sparta.schedule.dto.ScheduleRequestDto;
 import com.sparta.schedule.dto.ScheduleResponseDto;
 import com.sparta.schedule.entity.Schedule;
+import com.sparta.schedule.entity.User;
 import com.sparta.schedule.repository.ScheduleRepository;
+import com.sparta.schedule.security.UserDetailsImpl;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +23,10 @@ public class ScheduleService {
         this.scheduleRepository = scheduleRepository;
     }
 
-    public ScheduleResponseDto createSchedule(@RequestBody ScheduleRequestDto requestDto) {
-        Schedule schedule = new Schedule(requestDto);
+    public ScheduleResponseDto createSchedule(@RequestBody ScheduleRequestDto requestDto, UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+
+        Schedule schedule = new Schedule(requestDto, user);
 
         Schedule saveSchedule = scheduleRepository.save(schedule);
 
@@ -40,22 +44,24 @@ public class ScheduleService {
         return scheduleRepository.findAll().stream().map(ScheduleResponseDto::new).toList();
     }
 
-    public Long updateSchedule(Long id, ScheduleRequestDto requestDto) {
+    public Long updateSchedule(Long id, ScheduleRequestDto requestDto, UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
 
         Schedule schedule = findSchedule(id);
-            if(!schedule.getPassword().equals(requestDto.getPassword())){
-                throw  new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            if(!schedule.getUser().getId().equals(user.getId())){
+                throw  new IllegalArgumentException("작성자만 수정할 수 있습니다.");
             } else {
                 schedule.update(id, requestDto);
                 return id;
             }
     }
 
-    public Long deleteSchedule(Long id, ScheduleRequestDto requestDto){
+    public Long deleteSchedule(Long id,UserDetailsImpl userDetails){
+        User user = userDetails.getUser();
 
         Schedule schedule = findSchedule(id);
-            if(!schedule.getPassword().equals(requestDto.getPassword())){
-                throw  new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            if(!schedule.getUser().getId().equals(user.getId())){
+                throw  new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
             }else {
                 scheduleRepository.delete(schedule);
                 return id;

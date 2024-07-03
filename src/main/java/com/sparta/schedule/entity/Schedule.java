@@ -4,9 +4,9 @@ import com.sparta.schedule.dto.ScheduleRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Table(name = "schedule")
 @NoArgsConstructor
-public class Schedule {
+public class Schedule extends Timestamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,47 +23,19 @@ public class Schedule {
     private String title;
     @Column(name = "content", nullable = false)
     private String content;
-    @Column(name = "manager", nullable = false)
-    private String manager;
-    @Column(name = "password", nullable = false)
-    private String password;
-    @Column(name = "date")
-    private Timestamp date;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
 
-    public Schedule(ScheduleRequestDto requestDto){
+    public Schedule(ScheduleRequestDto requestDto, User user){
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
-        this.manager = requestDto.getManager();
-        this.password = requestDto.getPassword();
-        this.date = requestDto.getDate();
+        this.user = user;
     }
 
     public void update(Long id, ScheduleRequestDto requestDto){
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
-        this.manager = requestDto.getManager();
-        this.password = requestDto.getPassword();
-        this.date = requestDto.getDate();
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public void setManager(String manager) {
-        this.manager = manager;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }
